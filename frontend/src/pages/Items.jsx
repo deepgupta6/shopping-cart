@@ -60,20 +60,15 @@ const Items = () => {
   };
 
   const handleLogout = async () => {
-    try {
-      await fetch("http://localhost:8080/logout", {
-        method: "POST",
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      });
-      localStorage.removeItem("token");
-      toast.success("Logged out successfully");
-      navigate("/login");
-    } catch (err) {
-      toast.error("Logout failed");
-    }
-  };
+  try {
+    await logout(); // 
+    localStorage.removeItem("token");
+    toast.success("Logged out successfully");
+    navigate("/login");
+  } catch (err) {
+    toast.error("Logout failed");
+  }
+};
 
   return (
     <div className="items-container">

@@ -16,3 +16,4 @@ export const getCarts = () => API.get('/carts');
 export const createCart = (cartData) => API.post('/carts', cartData);
 export const getOrders = () => API.get('/orders');
 export const createOrder = (orderData) => API.post('/orders', orderData);
+export const logout = () => API.post('/logout');
