@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'https://deep-shopping-cart.vercel.app/' });
+const API = axios.create({ baseURL: 'https://shopping-cart-dzte.onrender.com' });
 
 API.interceptors.request.use((req) => {
     if (localStorage.getItem('token')) {
