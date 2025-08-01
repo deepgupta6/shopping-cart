@@ -7,5 +7,5 @@ type User struct {
 	Username string `gorm:"unique"`
 	Password string
 	Token    string
-	CartID   uint
+	//CartID   uint
 }

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// src/pages/Items.jsx
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   getItems,
@@ -8,19 +9,25 @@ import {
   getOrders,
 } from "../api";
 import { toast } from "sonner";
+import { AuthContext } from "../context/AuthContext";
 import "../styles.css";
 
 const Items = () => {
   const [items, setItems] = useState([]);
   const navigate = useNavigate();
+  const { logout } = useContext(AuthContext); // ✅ using AuthContext
 
   useEffect(() => {
     fetchItems();
   }, []);
 
   const fetchItems = async () => {
-    const res = await getItems();
-    setItems(res.data);
+    try {
+      const res = await getItems();
+      setItems(res.data);
+    } catch (err) {
+      toast.error("Failed to fetch items");
+    }
   };
 
   const addToCart = async (itemId) => {
@@ -42,13 +49,15 @@ const Items = () => {
   };
 
   const showCart = async () => {
-    try {
-      const res = await getCarts();
-      alert(JSON.stringify(res.data));
-    } catch (err) {
-      toast.error("Failed to fetch cart");
-    }
-  };
+  try {
+    const res = await getCarts();
+    const items = res.data.Items.map(ci => `Item ID: ${ci.Item.ID}, Name: ${ci.Item.Name}`).join("\n");
+    alert(items || "Your cart is empty");
+  } catch (err) {
+    toast.error("Failed to fetch cart");
+  }
+};
+
 
   const showOrders = async () => {
     try {
@@ -59,16 +68,11 @@ const Items = () => {
     }
   };
 
-  const handleLogout = async () => {
-  try {
-    await logout(); // 
-    localStorage.removeItem("token");
+  const handleLogout = () => {
+    logout(); // ✅ from context
     toast.success("Logged out successfully");
     navigate("/login");
-  } catch (err) {
-    toast.error("Logout failed");
-  }
-};
+  };
 
   return (
     <div className="items-container">
@@ -76,7 +80,7 @@ const Items = () => {
         <button onClick={checkout}>Checkout</button>
         <button onClick={showCart}>Cart</button>
         <button onClick={showOrders}>Order History</button>
-        <button onClick={handleLogout}>Logout</button> {/* ✅ LOGOUT */}
+        <button onClick={handleLogout}>Logout</button>
       </div>
       <h2>Items</h2>
       <div className="items-grid">

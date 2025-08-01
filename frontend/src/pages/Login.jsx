@@ -1,20 +1,20 @@
-// src/pages/Login.jsx
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { login } from "../api";
+import { login as loginApi } from "../api";
 import { toast } from "sonner";
-import "../styles.css";
+import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
   const [form, setForm] = useState({ username: "", password: "" });
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleLogin = async () => {
     try {
-      const res = await login(form);
-      localStorage.setItem("token", res.data.token);
+      const res = await loginApi(form);
+      login(res.data.token); // ✅ update context + localStorage
       toast.success("Login successful");
-      navigate("/"); // redirect to home/items
+      navigate("/");
     } catch (err) {
       toast.error("Invalid username or password");
     }

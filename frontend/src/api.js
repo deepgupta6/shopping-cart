@@ -1,12 +1,11 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'https://shopping-cart-dzte.onrender.com' });
+const API = axios.create({ baseURL: import.meta.env.VITE_API_URL });
 
 API.interceptors.request.use((req) => {
-    if (localStorage.getItem('token')) {
-        req.headers.Authorization = `${localStorage.getItem('token')}`;
-    }
-    return req;
+  const token = localStorage.getItem("token");
+  if (token) req.headers.Authorization = token;
+  return req;
 });
 
 export const createUser = (userData) => API.post('/users', userData);

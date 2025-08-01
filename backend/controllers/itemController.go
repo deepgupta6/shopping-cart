@@ -9,13 +9,19 @@ import (
 )
 
 func CreateItem(c *gin.Context) {
-	var item models.Item
-	if err := c.ShouldBindJSON(&item); err != nil {
+	var items []models.Item
+
+	if err := c.ShouldBindJSON(&items); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	database.DB.Create(&item)
-	c.JSON(http.StatusOK, item)
+
+	if result := database.DB.Create(&items); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, items)
 }
 
 func GetItems(c *gin.Context) {
